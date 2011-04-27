@@ -1,0 +1,7 @@
+0.02 BKB 2011-04-27 10:04:39
+
+Increased version dependency on Image::PNG::Libpng in order to escape
+from old bug printing "OK ... OK " on stdout and confusing Test::More.
+
+0.01
+
