@@ -1,0 +1,3 @@
+# Ignore distribution files.
+
+*.tar.gz

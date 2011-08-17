@@ -4,10 +4,12 @@ use strict;
 use Image::PNG::FileConvert 'png2file';
 use Getopt::Long;
 my $infile = $ARGV[0];
-if (! $infile) {
+if ($infile) {
+    png2file ($infile);
+}
+else {
     usage ();
 }
-png2file ($infile);
 exit;
 
 sub usage

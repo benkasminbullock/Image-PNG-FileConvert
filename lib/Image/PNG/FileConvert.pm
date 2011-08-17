@@ -4,7 +4,7 @@ require Exporter;
 @EXPORT_OK = qw/file2png png2file/;
 use warnings;
 use strict;
-our $VERSION = 0.02;
+our $VERSION = 0.03;
 use Carp;
 use Image::PNG::Libpng ':all';
 use Image::PNG::Const ':all';
@@ -102,10 +102,10 @@ sub png2file
     my ($png_file, $options) = @_;
     my $me = __PACKAGE__ . "::png2file";
     if (! $png_file) {
-        carp "Please specify a file";
+        croak "$me: please specify a file";
     }
     if (! -f $png_file) {
-        carp "Can't find the PNG file '$png_file'";
+        croak "$me: can't find the PNG file '$png_file'";
     }
     if (! defined $options) {
         $options = {};
@@ -128,7 +128,7 @@ sub png2file
     close $input;
     my $text_segments = get_text ($png);
     if (! defined $text_segments) {
-        carp "$me: the PNG file '$png_file' does not have any text segments, so either it was not created by " . __PACKAGE__ . "::file2png, or it has had its text segments removed";
+        croak "$me: the PNG file '$png_file' does not have any text segments, so either it was not created by " . __PACKAGE__ . "::file2png, or it has had its text segments removed";
         return;
     }
     my $name;
@@ -145,16 +145,14 @@ sub png2file
         }
     }
     if (! $name || ! $bytes) {
-        carp "$me: the PNG file '$png_file' does not have information about the file name or the number of bytes of data, so either it was not created by " . __PACKAGE__ . "::file2png, or it has had its text segments removed";
-        return;
+        croak "$me: the PNG file '$png_file' does not have information about the file name or the number of bytes of data, so either it was not created by " . __PACKAGE__ . "::file2png, or it has had its text segments removed";
     }
     if ($bytes <= 0) {
-        carp "$me: the byte file size $bytes in '$png_file' is impossible";
+        croak "$me: the byte file size $bytes in '$png_file' is impossible";
     }
     my $row_bytes = get_rowbytes ($png);
     if (-f $name) {
-        carp "$me: a file with the name '$name' already exists";
-        return;
+        croak "$me: a file with the name '$name' already exists";
     }
     open my $output, ">:raw", $name;
     for my $i (0..$#$rows - 1) {
@@ -247,6 +245,19 @@ Ben Bullock, <bkb@cpan.org>
 
 You can use, modify and distribute this software under the Perl
 Artistic Licence or the GNU General Public Licence.
+
+=head1 DIAGNOSTICS
+
+=head1 SEE ALSO
+
+=over
+
+=item Acme::Steganography::Image::Png
+
+L<Acme::Steganography::Image::Png> I'm not sure what this does, but
+maybe it does something similar to Image::PNG::FileConvert.
+
+=back
 
 =head1 UTILITIES
 
