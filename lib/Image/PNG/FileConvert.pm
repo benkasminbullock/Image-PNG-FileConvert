@@ -86,10 +86,10 @@ sub file2png
     }
     # Put the name and size of the file into the file as text
     # segments.
-    set_text ($png, [{keyword => 'bytes',
+    set_text ($png, [{key => 'bytes',
                       text => $bytes,
                       compression => PNG_TEXT_COMPRESSION_NONE},
-                     {keyword => 'name',
+                     {key => 'name',
                       text => $name,
                       compression => PNG_TEXT_COMPRESSION_NONE},
                     ]);

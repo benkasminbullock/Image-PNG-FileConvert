@@ -1,6 +1,6 @@
 use warnings;
 use strict;
-use Test::More;
+use Test::More tests => 4;
 BEGIN { use_ok('Image::PNG::FileConvert') };
 use Image::PNG::FileConvert qw/file2png png2file/;
 use FindBin;
@@ -8,7 +8,8 @@ use File::Compare;
 
 my $infile = "$FindBin::Bin/Image-PNG-FileConvert.t";
 round_trip ($infile);
-done_testing ();
+exit;
+#done_testing ();
 
 =head2 round_trip
 

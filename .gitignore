@@ -1,3 +1,7 @@
 # Ignore distribution files.
 
 *.tar.gz
+
+# "Makefile" is made from "Makefile.PL".
+
+Makefile
