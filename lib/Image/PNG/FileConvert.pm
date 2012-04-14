@@ -4,7 +4,7 @@ require Exporter;
 @EXPORT_OK = qw/file2png png2file/;
 use warnings;
 use strict;
-our $VERSION = 0.03;
+our $VERSION = 0.05;
 use Carp;
 use Image::PNG::Libpng ':all';
 use Image::PNG::Const ':all';
@@ -57,13 +57,18 @@ sub file2png
     if ($options->{verbose}) {
         printf "Read 0x%X rows.\n", $i;
     }
-    # The number of bytes in the last row.
-    my $end_bytes = $bytes % $options->{row_length};
+
     # Fill the final row up with useless bytes so that we are not
     # reading from unallocated memory.
+
+    # The number of bytes in the last row.
+    my $end_bytes = $bytes % $options->{row_length};
     if ($end_bytes > 0) {
         $rows[-1] .= "X" x ($options->{row_length} - $end_bytes);
     }
+
+    # Create the PNG data in a Perl structure.
+
     my $png = create_write_struct ();
     my %IHDR = (
         width => $options->{row_length},
@@ -73,9 +78,14 @@ sub file2png
     );
     set_IHDR ($png, \%IHDR);
     set_rows ($png, \@rows);
+
+    # Write the PNG data to a file.
+
     open my $output, ">:raw", "$png_file";
     init_io ($png, $output);
+
     # Set the timestamp of the PNG file to the current time.
+
     set_tIME ($png);
     my $name;
     if ($options->{name}) {

@@ -12,7 +12,7 @@ WriteMakefile (
     ABSTRACT_FROM => $pm,
     # Modules which this depends on
     PREREQ_PM => {
-        'Image::PNG' => 0.09,
+        'Image::PNG' => '0.10',
     },
     # Executable files (scripts) to be installed
     EXE_FILES => [
