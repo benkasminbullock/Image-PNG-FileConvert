@@ -3,6 +3,7 @@ use warnings;
 use ExtUtils::MakeMaker;
 
 my $pm = 'lib/Image/PNG/FileConvert.pm';
+my $repo = 'https://github.com/benkasminbullock/Image-PNG-FileConvert';
 
 WriteMakefile (
     NAME => 'Image::PNG::FileConvert',
@@ -21,5 +22,11 @@ WriteMakefile (
     ],
     LICENSE => 'perl',
     AUTHOR => 'Ben Bullock <bkb@cpan.org>',
+    META_MERGE => {
+        resources => {
+            repository => $repo,
+            bugtracker => "$repo/issues",
+        }
+    },    
 );
 
