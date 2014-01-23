@@ -13,7 +13,7 @@ WriteMakefile (
     ABSTRACT_FROM => $pm,
     # Modules which this depends on
     PREREQ_PM => {
-        'Image::PNG' => '0.10',
+        'Image::PNG::Libpng' => '0.27',
     },
     # Executable files (scripts) to be installed
     EXE_FILES => [
@@ -28,5 +28,8 @@ WriteMakefile (
             bugtracker => "$repo/issues",
         }
     },    
+    # There is no requirement as far as I know, but Image::PNG::Libpng
+    # has this.
+    MIN_PERL_VERSION => '5.008001',
 );
 

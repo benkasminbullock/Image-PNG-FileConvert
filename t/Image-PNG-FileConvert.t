@@ -37,6 +37,9 @@ sub round_trip
     png2file ($test_png, {verbose => 1});
     ok (-f $back, "File '$back' exists");
     ok (compare ($back, $file) == 0, "Round trip output is equal to input");
+    if (-f $back) {
+	unlink $back;
+    }
 }
 
 # Local variables:
