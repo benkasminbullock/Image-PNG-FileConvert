@@ -36,6 +36,11 @@ whatever data is put into the original image can always be recovered
 exactly. This module takes advantage of that to use PNG image format
 to store arbitrary data under the guise of a PNG image.
 
+This module is very simplistic, and should be considered an example of
+the use of L<Image::PNG::Libpng>. If you need to do more complex
+things than this module provides, please consider reading the source
+code of this module as a starting point for making your own functions.
+
 =head1 FUNCTIONS
 
 =head2 file2png
@@ -81,18 +86,12 @@ An option "name" overrides the file name used in the input:
 
     file2png ('file.png', name => 'another-name.txt');
 
-=head1 BUGS
-
-=over
-
-=item Holds file in memory
-
-Both the routines here hold the entire file in memory, limiting the
-data size which can be converted to or from a PNG.
-
-=back
-
 =head1 SEE ALSO
+
+For more information about the PNG format itself, see
+L<Image::PNG::Libpng/SEE ALSO>.
+
+Other CPAN modules with a similar function to [% module %] include
 
 =over
 
@@ -104,6 +103,21 @@ L<Acme::Steganography::Image::Png> hides data in a PNG image.
 
 L<Image::PNG::Write::BW> creates minimal black and white PNG files
 from user data.
+
+=back
+
+=head1 DEPENDENCIES
+
+=over
+
+=item Image::PNG::Libpng
+
+L<Image::PNG::Libpng> is used for all the PNG reading and writing
+functions.
+
+=item Carp
+
+L<Carp> is used to report errors.
 
 =back
 

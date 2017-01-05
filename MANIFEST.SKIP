@@ -17,3 +17,4 @@
 ^examples/newfile\.txt$
 ^xt/.*\.t$
 ^t/test\.png$
+^examples/Makefile$
