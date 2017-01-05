@@ -109,7 +109,7 @@ sub file2png
 
 sub png2file
 {
-    my ($png_file, $options) = @_;
+    my ($png_file, %options) = @_;
     my $me = __PACKAGE__ . "::png2file";
     if (! $png_file) {
         croak "$me: please specify a file";
@@ -117,22 +117,29 @@ sub png2file
     if (! -f $png_file) {
         croak "$me: can't find the PNG file '$png_file'";
     }
-    if (! defined $options) {
-        $options = {};
-    }
+    my $verbose = $options{verbose};
     open my $input, "<:raw", $png_file;
     my $png = create_read_struct ();
     init_io ($png, $input);
-    if ($options->{verbose}) {
+    if ($verbose) {
         print "Reading file\n";
     }
     read_png ($png);
     my $IHDR = get_IHDR ($png);
-    if ($options->{verbose}) {
+    # Check that the IHDR data looks like something created by
+    # file2png.
+    if ($IHDR->{color_type} != PNG_COLOR_TYPE_GRAY) {
+	croak "$me: Wrong color type $IHDR->{color_type}; expected " .
+	    PNG_COLOR_TYPE_GRAY;
+    }
+    if ($IHDR->{bit_depth} != 8) {
+	croak "$me: Wrong bit depth $IHDR->{bit_depth}; expected 8";
+    }
+    if ($verbose) {
         print "Getting rows\n";
     }
     my $rows = get_rows ($png);
-    if ($options->{verbose}) {
+    if ($verbose) {
         print "Finished reading file\n";
     }
     close $input;
@@ -151,11 +158,20 @@ sub png2file
             $bytes = $text_segment->{text};
         }
         else {
-            carp "Unknown text segment with key '$text_segment->{key}' in '$png_file'";
+            carp "$me: unknown text segment with key '$text_segment->{key}' in '$png_file'";
         }
     }
-    if (! $name || ! $bytes) {
-        croak "$me: the PNG file '$png_file' does not have information about the file name or the number of bytes of data, so either it was not created by " . __PACKAGE__ . "::file2png, or it has had its text segments removed";
+    if ($options{name}) {
+	if ($verbose) {
+	    print "Overriding file name $name to $options{name}.\n";
+	}
+	$name = $options{name};
+    }
+    if (! $name) {
+        croak "$me: no file name for '$png_file'";
+    }
+    if (! $bytes) {
+        croak "$me: byte count is missing from '$png_file'";
     }
     if ($bytes <= 0) {
         croak "$me: the byte file size $bytes in '$png_file' is impossible";
@@ -164,7 +180,7 @@ sub png2file
     if (-f $name) {
         croak "$me: a file with the name '$name' already exists";
     }
-    open my $output, ">:raw", $name;
+    open my $output, ">:raw", $name or die "Can't open $name: $!";
     for my $i (0..$#$rows - 1) {
         print $output $rows->[$i];
     }
@@ -175,96 +191,3 @@ sub png2file
 }
 
 1;
-
-=head1 NAME
-
-Image::PNG::FileConvert - convert a file to or from a PNG image
-
-=head1 SYNOPSIS
-
-    use Image::PNG::FileConvert qw/file2png png2file/;
-    # Convert a data file into a PNG image
-    file2png ('myfile.txt', 'myfile.png');
-    # Extract a data file from a PNG image
-    png2file ('myfile.png');
-
-=head1 FUNCTIONS
-
-=head2 file2png
-
-    file2png ('myfile.txt', 'myfile.png');
-
-Convert C<myfile.txt> into a PNG graphic. The function uses the data
-from myfile.txt to write a greyscale (black and white) image. The
-bytes of the file correspond to the pixels of the image.
-
-When this PNG is unwrapped using L</png2file>, it will be called
-C<myfile.txt> again. If you want to specify a different name,
-
-    file2png ('myfile.txt', 'myfile.png',
-              { name => 'not-the-same-name.txt' });
-
-and the file will be unwrapped into C<not-the-same-name.txt>.
-
-If you want your PNG to have a different width than the default, there
-is another option, C<row_length>, specified in the same way:
-
-    file2png ('myfile.txt', 'myfile.png', { row_length => 0x100 });
-
-The number you specify for C<row_length> will be the width of the
-image in pixels.
-
-=head2 png2file
-
-    png2file ('myfile.png');
-
-Convert C<myfile.png> into a data file. C<myfile.png> must be a PNG
-created using L</file2png>. The file is stored in whatever the name of
-the file given to L</file2png> was.
-
-Please note that this only converts PNG files output by L</file2png>,
-not general PNG files.
-
-=head1 BUGS
-
-=over
-
-=item Holds file in memory
-
-Both the routines here hold the entire file in memory, limiting the
-data size which can be converted to or from a PNG.
-
-=item There should be a way to specify the output name in png2file
-
-There should be some option to specify the name of the output file in
-L</png2file>.
-
-=back
-
-=head1 AUTHOR
-
-Ben Bullock, <bkb@cpan.org>
-
-=head1 LICENCE
-
-You can use, modify and distribute this software under the Perl
-Artistic Licence or the GNU General Public Licence.
-
-=head1 SEE ALSO
-
-=over
-
-=item Acme::Steganography::Image::Png
-
-L<Acme::Steganography::Image::Png> I'm not sure what this does, but
-maybe it does something similar to Image::PNG::FileConvert.
-
-=back
-
-=head1 UTILITIES
-
-The distribution also includes two utility scripts, file2png and
-png2file, which convert a file to a PNG image and back again.
-
-=cut
-

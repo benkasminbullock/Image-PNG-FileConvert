@@ -10,3 +10,10 @@
 ^MYMETA\.(json|yml)$
 ^t/back$
 ^build\.pl$
+^examples/.*-out\.txt$
+^lib/Image/PNG/FileConvert\.pod\.tmpl$
+^make-pod\.pl$
+^examples/myfile\.png$
+^examples/newfile\.txt$
+^xt/.*\.t$
+^t/test\.png$

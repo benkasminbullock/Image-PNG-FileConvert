@@ -3,6 +3,7 @@ use warnings;
 use ExtUtils::MakeMaker;
 
 my $pm = 'lib/Image/PNG/FileConvert.pm';
+my $pod = 'lib/Image/PNG/FileConvert.pod';
 my $repo = 'https://github.com/benkasminbullock/Image-PNG-FileConvert';
 
 WriteMakefile (
@@ -10,7 +11,7 @@ WriteMakefile (
     # Where to get the module's version information
     VERSION_FROM => $pm,
     # Where the file abstract is.
-    ABSTRACT_FROM => $pm,
+    ABSTRACT_FROM => $pod,
     # Modules which this depends on
     PREREQ_PM => {
         'Image::PNG::Libpng' => '0.27',

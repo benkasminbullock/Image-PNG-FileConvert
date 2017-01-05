@@ -10,3 +10,9 @@ Makefile
 
 README
 MANIFEST
+
+examples/synopsis-out.txt
+examples/newfile.txt
+examples/myfile.png
+t/test.png
+lib/Image/PNG/FileConvert.pod
