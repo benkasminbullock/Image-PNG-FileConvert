@@ -11,7 +11,7 @@ binmode STDOUT, ":encoding(utf8)";
 binmode STDERR, ":encoding(utf8)";
 use Deploy qw/do_system older/;
 use Module::Extract::Use;
-use JSON::Parse 'json_file_to_perl';
+use JSON::Parse 'read_json';
 use Perl::Build 'get_info';
 my $info = get_info (base => "$Bin/../");
 die unless $info;
@@ -27,7 +27,7 @@ if (older ($meta, $make)) {
 	die "no $meta";
     }
 }
-my $minfo = json_file_to_perl ($meta);
+my $minfo = read_json ($meta);
 my $runreq = $minfo->{prereqs}{runtime}{requires};
 my %mods;
 for my $module (@modules) {
